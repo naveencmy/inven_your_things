@@ -1,6 +1,6 @@
 const service = require("./auth.service");
 // it control's the registeration process
-exports.register = async (req, res) => {
+exports.register = async (req, res,next) => {
   try {
     const user = await service.register(req.body);
     res.json(user);
@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
   }
 };
 // control the login process control
-exports.login = async (req, res) => {
+exports.login = async (req, res,next) => {
   try {
     const data = await service.login(req.body);
     res.json(data);
@@ -18,11 +18,11 @@ exports.login = async (req, res) => {
   }
 };
 // to create a new user (worker ) but it can only access by the(admin & superadmin)
-exports.createWorker = async (req, res) => {
+exports.createWorker = async (req, res,next) => {
   try {
     const workerData = {
       ...req.body,
-      role: "worker"    // force worker role
+      role: "worker"    // by default force worker role
     };
 
     const worker = await service.register(workerData);
