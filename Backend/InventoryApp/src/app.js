@@ -10,6 +10,7 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/api", routes);
-const { errorHandler } = require("./core/errors");
+const { errorHandler,notFound } = require("./core/middelware");
+app.use(notFound)
 app.use(errorHandler);
 module.exports = app;
