@@ -1,0 +1,670 @@
+Directory structure:
+└── naveencmy-inven_your_things/
+    ├── invon_your_thing.sln
+    ├── LICENSE
+    └── Backend/
+        ├── app.gitignore
+        └── InventoryApp/
+            ├── README.md
+            ├── package.json
+            └── src/
+                ├── app.js
+                ├── server.js
+                ├── config/
+                │   └── db.js
+                ├── core/
+                │   └── auth.js
+                ├── modules/
+                │   ├── auth/
+                │   │   ├── auth.controller.js
+                │   │   ├── auth.repo.js
+                │   │   ├── auth.routes.js
+                │   │   └── auth.service.js
+                │   ├── products/
+                │   │   ├── product.controller.js
+                │   │   ├── product.repo.js
+                │   │   ├── product.routes.js
+                │   │   └── product.service.js
+                │   └── sales/
+                │       ├── sale.controller.js
+                │       ├── sale.repo.js
+                │       ├── sale.routes.js
+                │       └── sale.service.js
+                └── routes/
+                    └── index.js
+
+================================================
+FILE: invon_your_thing.sln
+================================================
+ï»¿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C482212-B921-4CEB-BE7D-B1A562065A98}
+	EndGlobalSection
+EndGlobal
+
+
+
+================================================
+FILE: LICENSE
+================================================
+MIT License
+
+Copyright (c) 2025 Naveen Kumar M E
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+================================================
+FILE: Backend/app.gitignore
+================================================
+node_modules/
+.env
+.DS_Store
+npm-debug.log
+logs/
+
+
+
+================================================
+FILE: Backend/InventoryApp/README.md
+================================================
+# Inventory Management System – Backend (Express + PostgreSQL)
+
+A modular, scalable backend system built for **inventory, sales, workers, admin management**, designed with clean architecture and ready for CI/CD deployment.  
+This project is a part of the **InvoN – Your Thing** software suite.
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication + Roles
+- JWT-based login
+- **Admin, Worker, Superadmin** role system
+- Admin can create workers
+- Workers can add products and sales
+- Admin can view sales reports
+
+### 📦 Product Management
+- Add new products
+- Fetch all products
+- Automatic stock updates when a sale is made
+
+### 💰 Sales Management
+- Worker can enter sales
+- Auto decrement product quantity
+- Admin can view sales reports
+
+### 🧱 Modular Architecture
+Each feature has its own:
+- Controller
+- Service
+- Repository
+- Routes
+
+Easy to expand with new modules (credits, billing, analytics, POS, etc.)
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|------|------------|
+| Backend Framework | **Node.js + Express.js** |
+| Database | **PostgreSQL** |
+| Auth | **JWT (jsonwebtoken)** |
+| ORM/Query | **pg (PostgreSQL client)** |
+| Security | **Helmet, CORS** |
+| Development | **Nodemon** |
+
+---
+
+## 📁 Folder Structure
+
+Backend/
+InventoryApp/
+src/
+config/
+db.js # DB connection
+env.js # environment config (optional)
+core/
+auth.js # role middleware
+errors.js # global error handler
+modules/
+auth/
+auth.controller.js
+auth.service.js
+auth.repo.js
+auth.routes.js
+products/
+product.controller.js
+product.service.js
+product.repo.js
+product.routes.js
+sales/
+sale.controller.js
+sale.service.js
+sale.repo.js
+sale.routes.js
+routes/
+index.js
+app.js
+server.js
+migrations/
+001_init.sql # DB schema
+.env
+Dockerfile
+package.json
+
+---
+
+## 🔧 Environment Variables (`.env`)
+
+Postgres DB Config
+DB_USER=postgres
+DB_PASS=YOUR_PASSWORD
+DB_HOST=localhost
+DB_NAME=inventoryapp
+DB_PORT=5432
+Server
+PORT=5000
+JWT Secret
+JWT_SECRET=supersecretkey123
+
+---
+
+## 🗄 Database Schema
+
+### `products`
+| Field | Type |
+|-------|------|
+| id | SERIAL PK |
+| name | VARCHAR(100) |
+| price | NUMERIC |
+| qty | INT |
+
+### `sales`
+| Field | Type |
+|-------|------|
+| id | SERIAL PK |
+| product_id | INT FK |
+| qty | INT |
+| created_at | TIMESTAMP |
+
+### `users`
+| Field | Type |
+|-------|------|
+| id | SERIAL PK |
+| name | TEXT |
+| email | TEXT UNIQUE |
+| password | TEXT |
+| role | TEXT (worker/admin/superadmin) |
+
+---
+
+## ▶ Running the Backend
+
+Install dependencies:
+dnddd
+
+
+## 👥 Team
+
+Naveen Kumar M – Backend & DevOps
+Mukesh – Database Designer
+Roshan – Frontend (React/React Native)
+
+## 📜 License
+
+MIT License — free to use and modify.
+
+
+================================================
+FILE: Backend/InventoryApp/package.json
+================================================
+{
+  "name": "inventory-backend",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "joi": "^17.10.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "pg-pool": "^3.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/app.js
+================================================
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const routes = require("./routes");
+
+const app = express();
+
+app.use(cors());
+app.use(helmet());
+app.use(express.json());
+
+app.use("/api", routes);
+
+module.exports = app;
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/server.js
+================================================
+require("dotenv").config();
+const app = require("./app");
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/config/db.js
+================================================
+require("dotenv").config();
+const { Pool } = require("pg");
+
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT,
+});
+pool.connect((err,client,release)=>{
+  if(err){
+  console.error("Sorry!, DB is failed to connect");
+}
+  else{
+console.log("App DataBase is connected");
+release();}
+
+});
+module.exports = pool;
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/core/auth.js
+================================================
+exports.auth = (roles = []) => {
+  return (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "No token" });
+
+    try {
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = user;
+
+      if (roles.length && !roles.includes(user.role)) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      next();
+    } catch {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  };
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/auth/auth.controller.js
+================================================
+const service = require("./auth.service");
+// it control's the registeration process
+exports.register = async (req, res,next) => {
+  try {
+    const user = await service.register(req.body);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+};
+// control the login process control
+exports.login = async (req, res,next) => {
+  try {
+    const data = await service.login(req.body);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+// to create a new user (worker ) but it can only access by the(admin & superadmin)
+exports.createWorker = async (req, res,next) => {
+  try {
+    const workerData = {
+      ...req.body,
+      role: "worker"    // by default force worker role
+    };
+
+    const worker = await service.register(workerData);
+    res.json({
+      message: "Worker created successfully",
+      worker
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/auth/auth.repo.js
+================================================
+const db = require("../../config/db");
+
+exports.findByEmail = async (email) => {
+  const res = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+  return res.rows[0];
+};
+
+exports.createUser = async ({ name, email, password, role }) => {
+  const res = await db.query(
+    `INSERT INTO users(name, email, password, role)
+     VALUES ($1,$2,$3,$4)
+     RETURNING id, name, email, role`,
+    [name, email, password, role]
+  );
+  return res.rows[0];
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/auth/auth.routes.js
+================================================
+const router = require("express").Router();
+const ctrl = require("./auth.controller");
+const { auth } = require("../../core/auth");
+// if some have need , they can register (admin creates workers)
+router.post("/register", ctrl.register);
+
+// Login form function routes for admin & worker
+router.post("/login", ctrl.login);
+// It well help to create_worker to  the Admin & Superadmin create workers
+router.post("/create-worker", auth(["admin", "superadmin"]), ctrl.createWorker);
+
+module.exports = router;
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/auth/auth.service.js
+================================================
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const repo = require("./auth.repo");
+
+exports.register = async ({ name, email, password, role }) => {
+  const user = await repo.findByEmail(email);
+  if (user) throw new Error("Email already registered");
+
+  const hash = await bcrypt.hash(password, 10);
+
+  return repo.createUser({
+    name,
+    email,
+    password: hash,
+    role: role || "worker"
+  });
+};
+
+exports.login = async ({ email, password }) => {
+  const user = await repo.findByEmail(email);
+  if (!user) throw new Error("User not found");
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) throw new Error("Invalid password");
+
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    }
+  };
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/products/product.controller.js
+================================================
+const service = require("./product.service");
+
+exports.createProduct = async (req, res) => {
+  try {
+    const p = await service.addProduct(req.body);
+    res.json(p);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+exports.getProducts = async (req, res) => {
+  try {
+    const data = await service.getProducts();
+    res.json(data);
+  } catch {
+    res.status(500).json({ message: "Error" });
+  }
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/products/product.repo.js
+================================================
+const db = require("../../config/db");
+
+exports.create = async ({ name, price, qty }) => {
+  const res = await db.query(
+    `INSERT INTO products(name, price, qty)
+     VALUES ($1,$2,$3)
+     RETURNING *`,
+    [name, price, qty]
+  );
+  return res.rows[0];
+};
+
+exports.getAll = async () => {
+  const res = await db.query(`SELECT * FROM products ORDER BY id DESC`);
+  return res.rows;
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/products/product.routes.js
+================================================
+const router = require("express").Router();
+const ctrl = require("./product.controller");
+const { auth } = require("../../core/auth");
+// the routes well followed under the RBAC to product controller
+router.post("/", auth(["admin", "worker", "superadmin"]), ctrl.createProduct);
+router.get("/", auth(["admin", "worker", "superadmin"]), ctrl.getProducts);
+
+module.exports = router;
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/products/product.service.js
+================================================
+const repo = require("./product.repo");
+
+exports.addProduct = async (data) => {
+  if (!data.name || !data.price || !data.qty)
+    throw new Error("Missing required fields");
+
+  return repo.create(data);
+};
+
+exports.getProducts = async () => {
+  return repo.getAll();
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/sales/sale.controller.js
+================================================
+const service = require("./sale.service");
+
+exports.createSale = async (req, res) => {
+  try {
+    const data = await service.makeSale(req.body);
+    res.json(data);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/sales/sale.repo.js
+================================================
+const db = require("../../config/db");
+
+exports.insertSale = async (productId, qty, client) => {
+  const result = await client.query(
+    `INSERT INTO sales(product_id, qty)
+     VALUES ($1,$2)
+     RETURNING *`,
+    [productId, qty]
+  );
+  return result.rows[0];
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/sales/sale.routes.js
+================================================
+const router = require("express").Router();
+const ctrl = require("./sale.controller");
+const { auth } = require("../../core/auth");
+
+router.post("/", auth(["worker", "admin", "superadmin"]), ctrl.createSale);
+
+
+module.exports = router;
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/modules/sales/sale.service.js
+================================================
+const db = require("../../config/db");
+const repo = require("./sale.repo");
+
+exports.makeSale = async ({ productId, qty }) => {
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const stock = await client.query(
+      `SELECT qty FROM products WHERE id=$1`, [productId]
+    );
+
+    if (stock.rows.length === 0) throw new Error("Product not found");
+    if (stock.rows[0].qty < qty) throw new Error("Insufficient stock");
+
+    await client.query(
+      `UPDATE products SET qty = qty - $1 WHERE id=$2`,
+      [qty, productId]
+    );
+
+    const sale = await repo.insertSale(productId, qty, client);
+
+    await client.query("COMMIT");
+    return sale;
+
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+};
+
+
+
+================================================
+FILE: Backend/InventoryApp/src/routes/index.js
+================================================
+const router = require("express").Router();
+//routes the sales and service:
+router.use("/products", require("../modules/products/product.routes"));
+router.use("/sales", require("../modules/sales/sale.routes"));
+// routes to the authandication to both admin&worker
+router.use("/auth", require("../modules/auth/auth.routes"));
+
+//[IN later we well add the Super-admin] routes :
+
+
+module.exports = router;
+
+

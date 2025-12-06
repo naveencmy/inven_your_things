@@ -1,6 +1,6 @@
 exports.auth = (roles = []) => {
   return (req, res, next) => {
-    const token = req.headers.authorization?.split(" ")[1];
+    const jwt = require("jsonwebtoken");
     if (!token) return res.status(401).json({ message: "No token" });
 
     try {
