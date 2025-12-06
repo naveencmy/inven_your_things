@@ -1,4 +1,4 @@
-// /src/core/middleware.js
+// To check all incoming data is to the all api point is that correct or not /src/core/middleware.js
 
 class AppError extends Error {
   constructor(message, statusCode = 400) {
